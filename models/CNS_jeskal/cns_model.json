@@ -1,0 +1,11 @@
+{
+  "container_tag": "mathiser/inference_server_models:CNS_JESKAL_504_DCPTATLAS_merged",
+  "human_readable_id": "cns_t1_oars",
+  "input_mountpoint": "/input",
+  "output_mountpoint": "/output",
+  "model_mountpoint": "/model",
+  "zip_file_path": "//home/mathis/projects/repos/inference_server_models/models/CNS_jeskal/cns_model.zip",
+  "use_gpu": true,
+  "model_available": true,
+  "description": "CNS normal tissue, developed by jeskall"
+}

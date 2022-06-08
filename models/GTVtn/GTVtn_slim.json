@@ -1,0 +1,11 @@
+{
+  "container_tag": "mathiser/inference_server_models:Task702_NKI_Drop_slim",
+  "human_readable_id": "gtvtn_slim",
+  "input_mountpoint": "/input",
+  "output_mountpoint": "/output",
+  "model_mountpoint": "/model",
+  "zip_file_path": "/home/mathis/projects/repos/inference_server_models/models/GTVt_GTVn/Task702_NKI_Drop.zip",
+  "use_gpu": true,
+  "model_available": true,
+  "description": "GTVtn segmentation in HN - single fold"
+}
