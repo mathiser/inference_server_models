@@ -1,0 +1,1 @@
+docker build . -t mathiser/inference_server_models:Task702_NKI_Drop_slim

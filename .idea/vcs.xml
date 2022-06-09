@@ -2,7 +2,9 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/inference_server_client" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/models/8_22-01-24_GTVs_uncertainty/img/nnUNet" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/models/9_22-01-24_GTVs_uncertainty_slim/img/nnUNet" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/models/GTVs_uncertainty_slim/img/nnUNet" vcs="Git" />
   </component>
 </project>

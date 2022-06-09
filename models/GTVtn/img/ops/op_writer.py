@@ -27,11 +27,11 @@ class DataWriter(Operator):
         out_path = op_output.get().path
 
         img = sitk.GetImageFromArray(arr)
-        sitk.WriteImage(img, os.path.join(out_path, "predictions.nii.gz"))
+        sitk.WriteImage(img, os.path.join(out_path, "pred.nii.gz"))
         labels = {
             1: "GTVt",
             2: "GTVn"
         }
-        with open(os.path.join(out_path, "labels.json"), "w") as f:
+        with open(os.path.join(out_path, "pred.json"), "w") as f:
             f.write(json.dumps(labels))
         print(timer.report())
