@@ -29,21 +29,16 @@ class Predict(Operator):
         tmp_out = tempfile.mkdtemp()
         try:
             sitk.WriteImage(img, os.path.join(tmp_in, "tmp_0000.nii.gz"))
-            #os.system(f"nnUNet_predict -t 504 -tr nnUNetTrainerV2 -f 0 -i {tmp_in} -o {tmp_out}")
+            os.system(f"nnUNet_predict -t 504 -tr nnUNetTrainerV2 -f 0 -i {tmp_in} -o {tmp_out}")
 
-#######3
-            pred_img = sitk.ReadImage("/home/mathis/pred.nii.gz")
-            pred_arr = sitk.GetArrayFromImage(pred_img)
-            op_output.set(pred_arr, "seg")
-########
-            # for f in os.listdir(tmp_out):
-            #     if f.endswith(".nii.gz"):
-            #         pred_img = sitk.ReadImage(os.path.join(tmp_out, f))
-            #         pred_arr = sitk.GetArrayFromImage(pred_img)
-            #         op_output.set(pred_arr, "seg")
-            #         break
-            # else:
-            #     raise Exception("No prediction found")
+            for f in os.listdir(tmp_out):
+                if f.endswith(".nii.gz"):
+                    pred_img = sitk.ReadImage(os.path.join(tmp_out, f))
+                    pred_arr = sitk.GetArrayFromImage(pred_img)
+                    op_output.set(pred_arr, "seg")
+                    break
+            else:
+                raise Exception("No prediction found")
 
         except Exception as e:
             self.logger.error(e)
