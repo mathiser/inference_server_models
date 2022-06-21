@@ -1,38 +1,37 @@
+import json
+import os.path
+
 from monai.deploy.core import Application
 
-from ops.op_invert import InvertImages
+from ops.op_postprocessing import SeparateStructure
+from ops.op_inference import Predict
 from ops.op_reader import DataLoader
 from ops.op_writer import DataWriter
-from ops.op_inference import Predict
-from ops.op_up_scale import Upscale
+
 
 class CNSOARApplication(Application):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
     def compose(self):
+        with open(os.path.join(os.path.dirname(__file__), "label_dict_split_labels.json"), "r") as r:
+            label_dict = json.loads(r.read())
+
         dataloader_op = DataLoader()
-        #inverter_op = InvertImages()
+
         predict_op = Predict()
-        #end_invert_op = InvertImages()
-        scale_up_op = Upscale()
+        postprocessing_op = SeparateStructure(label_dict=label_dict)
         writer_op = DataWriter()
 
         # Flows
-        #self.add_flow(dataloader_op, inverter_op, {"arr": ""})
+        self.add_flow(dataloader_op, predict_op, {"img": "img"})
+        # self.add_flow(predict_op, postprocessing_op, {"seg": "seg"})
+        # self.add_flow(dataloader_op, writer_op, {"dcm_dir": "dcm_dir"})
+        # self.add_flow(postprocessing_op, writer_op, {"seg": "seg"})
 
-        #self.add_flow(inverter_op, predict_op, {"": "arr"})
-        self.add_flow(dataloader_op, predict_op, {"arr": "arr",
-                                                  "ref_img": "ref_img"})
 
-        #self.add_flow(predict_op, end_invert_op, {"seg": ""})
-        #self.add_flow(end_invert_op, scale_up_op,  {"": "seg"})
-
-        self.add_flow(predict_op, scale_up_op, {"seg": "seg"})
-        self.add_flow(dataloader_op, scale_up_op, {"meta": "meta"})
-
-        self.add_flow(scale_up_op, writer_op, {"seg": "seg"})
-
+        self.add_flow(dataloader_op, writer_op, {"dcm_dir": "dcm_dir"})
+        self.add_flow(predict_op, writer_op, {"seg": "seg"})
 
 if __name__ == "__main__":
     # Creates the app and test it standalone. When running is this mode, please note the following:

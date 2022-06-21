@@ -1,30 +1,34 @@
 import logging
+
+import SimpleITK
 import numpy as np
 from typing import Dict
 import monai.deploy.core as md
 from monai.deploy.core import ExecutionContext, InputContext, IOType, Operator, OutputContext
 from .timer import TimeOP
 
+
+@md.input("seg", np.ndarray, IOType.IN_MEMORY)
+@md.output("seg", np.ndarray, IOType.IN_MEMORY)
+@md.env(pip_packages=["monai==0.6.0", "numpy", "nnunet"])
 class SeparateStructure(Operator):
-    def __init__(self):
+    def __init__(self, label_dict):
         self.logger = logging.getLogger("{}.{}".format(__name__, type(self).__name__))
         super().__init__()
+        self.label_dict = label_dict
 
-    @md.input("seg", np.ndarray, IOType.IN_MEMORY)
-    @md.input("label_array_dict", Dict[str, Dict], IOType.IN_MEMORY)
-    @md.output("seg", np.ndarray, IOType.IN_MEMORY)
-    @md.env(pip_packages=["monai==0.6.0", "numpy", "nnunet"])
     def compute(self, op_input: InputContext, op_output: OutputContext, context: ExecutionContext):
 
         timer = TimeOP(__name__)
         arr = op_input.get("seg")
-        label_dict = op_input.get("label_dict")
 
         try:
 
-            arr_sep = self.sep_structs(arr, label_dict["mirrored"])
-            arr_out = self.combine_arrays(arr_sep, arr, label_dict["non_mirrored"])
-            
+            arr_sep = self.sep_structs(arr, self.label_dict["mirrored"])
+            arr_out = self.combine_arrays(arr_sep, arr, self.label_dict["non_mirrored"])
+
+            SimpleITK.WriteImage(SimpleITK.GetImageFromArray(arr_out), "/home/mathis/pred_post_processed.nii.gz")
+
             op_output.set(arr_out)
             print(timer.report())
 

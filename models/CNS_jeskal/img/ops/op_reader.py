@@ -1,19 +1,15 @@
-import json
 import logging
-import os.path
-from typing import Dict
 
 import SimpleITK as sitk
 import monai.deploy.core as md
-import numpy as np
-from monai.deploy.core import ExecutionContext, DataPath, InputContext, IOType, Operator, OutputContext, Image
+from monai.deploy.core import ExecutionContext, DataPath, InputContext, IOType, Operator, OutputContext
+
 from .timer import TimeOP
 
 
-@md.input("arr", DataPath, IOType.DISK)
-@md.output("arr", np.ndarray, IOType.IN_MEMORY)
-@md.output("ref_img", sitk.Image, IOType.IN_MEMORY)
-@md.output("meta", Dict, IOType.IN_MEMORY)
+@md.input("", DataPath, IOType.DISK)
+@md.output("img", sitk.Image, IOType.IN_MEMORY)
+@md.output("dcm_dir", str, IOType.IN_MEMORY)
 @md.env(pip_packages=["monai==0.6.0", "simpleitk", "numpy"])
 class DataLoader(Operator):
     def __init__(self):
@@ -23,17 +19,15 @@ class DataLoader(Operator):
     def compute(self, op_input: InputContext, op_output: OutputContext, context: ExecutionContext):
         timer = TimeOP(__name__)
 
-        in_path = op_input.get().path
+        in_path = str(op_input.get().path)
 
-        for f in os.listdir(in_path):
-            path = os.path.join(in_path, f)
-            if "0000.nii.gz" in f:
-                img = sitk.ReadImage(path)
-                op_output.set(value=img, label="ref_img")
-                op_output.set(value=sitk.GetArrayFromImage(img), label="arr")
-            if f == "meta.json":
-                with open(path) as r:
-                    meta = dict(json.loads(r.read()))
-                op_output.set(value=meta, label="meta")
+        reader = sitk.ImageSeriesReader()
+        dicom_names = reader.GetGDCMSeriesFileNames(in_path)
+        reader.SetFileNames(dicom_names)
+
+        img = reader.Execute()
+
+        op_output.set(value=img, label="img")
+        op_output.set(value=in_path, label="dcm_dir")
 
         print(timer.report())
