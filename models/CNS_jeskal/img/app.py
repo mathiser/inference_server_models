@@ -25,13 +25,13 @@ class CNSOARApplication(Application):
 
         # Flows
         self.add_flow(dataloader_op, predict_op, {"img": "img"})
-        # self.add_flow(predict_op, postprocessing_op, {"seg": "seg"})
-        # self.add_flow(dataloader_op, writer_op, {"dcm_dir": "dcm_dir"})
-        # self.add_flow(postprocessing_op, writer_op, {"seg": "seg"})
-
-
+        self.add_flow(predict_op, postprocessing_op, {"seg": "seg"})
         self.add_flow(dataloader_op, writer_op, {"dcm_dir": "dcm_dir"})
-        self.add_flow(predict_op, writer_op, {"seg": "seg"})
+        self.add_flow(postprocessing_op, writer_op, {"seg": "seg"})
+
+
+        # self.add_flow(dataloader_op, writer_op, {"dcm_dir": "dcm_dir"})
+        # self.add_flow(predict_op, writer_op, {"seg": "seg"})
 
 if __name__ == "__main__":
     # Creates the app and test it standalone. When running is this mode, please note the following:

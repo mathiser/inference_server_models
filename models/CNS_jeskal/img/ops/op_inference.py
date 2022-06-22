@@ -27,6 +27,7 @@ class Predict(Operator):
 
         tmp_in = tempfile.mkdtemp()
         tmp_out = tempfile.mkdtemp()
+
         try:
             sitk.WriteImage(img, os.path.join(tmp_in, "tmp_0000.nii.gz"))
             os.system(f"nnUNet_predict -t 504 -tr nnUNetTrainerV2 -f 0 -i {tmp_in} -o {tmp_out}")
@@ -34,6 +35,7 @@ class Predict(Operator):
             for f in os.listdir(tmp_out):
                 if f.endswith(".nii.gz"):
                     pred_img = sitk.ReadImage(os.path.join(tmp_out, f))
+                    pred_img.CopyInformation(img)
                     pred_arr = sitk.GetArrayFromImage(pred_img)
                     op_output.set(pred_arr, "seg")
                     break
@@ -44,7 +46,8 @@ class Predict(Operator):
             self.logger.error(e)
             raise e
         finally:
-            shutil.rmtree(tmp_in)
-            shutil.rmtree(tmp_out)
+            pass
+            #shutil.rmtree(tmp_in)
+            #shutil.rmtree(tmp_out)
 
         print(timer.report())

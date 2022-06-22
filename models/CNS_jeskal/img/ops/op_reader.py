@@ -2,6 +2,7 @@ import logging
 
 import SimpleITK as sitk
 import monai.deploy.core as md
+from SimpleITK import DICOMOrientImageFilter
 from monai.deploy.core import ExecutionContext, DataPath, InputContext, IOType, Operator, OutputContext
 
 from .timer import TimeOP
@@ -22,10 +23,13 @@ class DataLoader(Operator):
         in_path = str(op_input.get().path)
 
         reader = sitk.ImageSeriesReader()
+        reader.LoadPrivateTagsOn()
         dicom_names = reader.GetGDCMSeriesFileNames(in_path)
         reader.SetFileNames(dicom_names)
 
         img = reader.Execute()
+        #dcm_orient = DICOMOrientImageFilter()
+        #dcm_orient.Execute(img)
 
         op_output.set(value=img, label="img")
         op_output.set(value=in_path, label="dcm_dir")

@@ -21,13 +21,14 @@ class SeparateStructure(Operator):
 
         timer = TimeOP(__name__)
         arr = op_input.get("seg")
+        #SimpleITK.WriteImage(SimpleITK.GetImageFromArray(arr), "/home/mathis/postproc_pre_transform.nii.gz")
+        arr = np.transpose(arr, (2, 0, 1))
+        #SimpleITK.WriteImage(SimpleITK.GetImageFromArray(arr), "/home/mathis/postproc_post_transform.nii.gz")
 
         try:
 
             arr_sep = self.sep_structs(arr, self.label_dict["mirrored"])
             arr_out = self.combine_arrays(arr_sep, arr, self.label_dict["non_mirrored"])
-
-            SimpleITK.WriteImage(SimpleITK.GetImageFromArray(arr_out), "/home/mathis/pred_post_processed.nii.gz")
 
             op_output.set(arr_out)
             print(timer.report())
