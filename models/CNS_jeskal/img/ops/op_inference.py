@@ -12,8 +12,7 @@ from monai.deploy.core import ExecutionContext, InputContext, IOType, Operator, 
 from .timer import TimeOP
 
 
-@md.input("arr", np.ndarray, IOType.IN_MEMORY)
-@md.input("ref_img", sitk.Image, IOType.IN_MEMORY)
+@md.input("img", sitk.Image, IOType.IN_MEMORY)
 @md.output("seg", np.ndarray, IOType.IN_MEMORY)
 @md.env(pip_packages=["monai==0.6.0", "simpleitk", "numpy", "nnunet"])
 class Predict(Operator):
@@ -24,20 +23,19 @@ class Predict(Operator):
     def compute(self, op_input: InputContext, op_output: OutputContext, context: ExecutionContext):
 
         timer = TimeOP(__name__)
-        arr = op_input.get("arr")
-        ref_img = op_input.get("ref_img")
+        img = op_input.get("img")
 
         tmp_in = tempfile.mkdtemp()
         tmp_out = tempfile.mkdtemp()
+
         try:
-            in_img = sitk.GetImageFromArray(arr)
-            in_img.SetSpacing(ref_img.GetSpacing())
-            sitk.WriteImage(in_img, os.path.join(tmp_in, "tmp_0000.nii.gz"))
+            sitk.WriteImage(img, os.path.join(tmp_in, "tmp_0000.nii.gz"))
             os.system(f"nnUNet_predict -t 504 -tr nnUNetTrainerV2 -f 0 -i {tmp_in} -o {tmp_out}")
 
             for f in os.listdir(tmp_out):
                 if f.endswith(".nii.gz"):
                     pred_img = sitk.ReadImage(os.path.join(tmp_out, f))
+                    pred_img.CopyInformation(img)
                     pred_arr = sitk.GetArrayFromImage(pred_img)
                     op_output.set(pred_arr, "seg")
                     break
@@ -48,7 +46,8 @@ class Predict(Operator):
             self.logger.error(e)
             raise e
         finally:
-            shutil.rmtree(tmp_in)
-            shutil.rmtree(tmp_out)
+            pass
+            #shutil.rmtree(tmp_in)
+            #shutil.rmtree(tmp_out)
 
         print(timer.report())
