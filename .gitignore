@@ -1,2 +1,3 @@
-*.zip
+**/*.zip
+**/*.nii.gz
 **/__pycache__/*

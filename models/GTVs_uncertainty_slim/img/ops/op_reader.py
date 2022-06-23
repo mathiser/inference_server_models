@@ -25,14 +25,14 @@ class DataLoader(Operator):
 
         for f in os.listdir(in_path):
             path = os.path.join(in_path, f)
-            if "0000" in f:
+            if f == "tmp_0000.nii.gz":
                 out_dict[f] = self.get_array_from_path(path)
                 op_output.set(value=sitk.ReadImage(path), label="ref_image")
-            if "0001" in f:
+            if f == "tmp_0001.nii.gz":
                 out_dict[f] = self.get_array_from_path(path)
-            if "0002" in f:
+            if f == "tmp_0002.nii.gz":
                 out_dict[f] = self.get_array_from_path(path)
-            if "0003" in f:
+            if f == "tmp_0003.nii.gz":
                 out_dict[f] = self.get_array_from_path(path)
 
         op_output.set(value=out_dict, label="label_array_dict")

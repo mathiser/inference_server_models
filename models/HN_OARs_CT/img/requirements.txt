@@ -1,0 +1,8 @@
+monai
+monai-deploy-app-sdk
+torch>=1.6
+numpy
+simpleitk
+typeguard
+matplotlib
+rt_utils
