@@ -1,0 +1,2 @@
+docker build . -t mathiser/inference_server_models:GTVs_uncertainty_task300_slim
+docker push mathiser/inference_server_model:GTVs_uncertainty_task300_slim

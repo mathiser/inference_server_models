@@ -1,0 +1,11 @@
+{
+  "docker_image_context": "img",
+  "container_tag": "mathiser/inference_server_models:HN_OAR_CT_DCPT",
+  "human_readable_id": "HN_OAR_CT_DCPT",
+  "input_mountpoint": "/input",
+  "output_mountpoint": "/output",
+  "model_mountpoint": "/model",
+  "use_gpu": true,
+  "model_available": true,
+  "description": "Most oars from 504 and submandibular from 508"
+}

@@ -4,11 +4,7 @@
   "input_mountpoint": "/input",
   "output_mountpoint": "/output",
   "model_mountpoint": "/model",
-  "zip_file": "./9_22-01-24_GTVs_uncertainty_slim.zip",
   "use_gpu": true,
   "model_available": true,
-  "description": "GTVs segmentation in HN - single fold",
-  "docker_context": "./img",
-  "dockerfile": "Dockerfile",
-  "version": "2022-01-24_0.1"
+  "description": "GTVs segmentation in HN - single fold"
 }
