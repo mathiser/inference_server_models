@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import shutil
 
 import SimpleITK as sitk
 import monai.deploy.core as md
@@ -36,12 +37,12 @@ class DataWriter(Operator):
             1: {"name": "BrainStem", "color": [187, 255, 187]},
             2: {"name": "Chiasm", "color": [250, 20, 250]},
             3: {"name": "Pituitary", "color": [128, 0, 0]},
-            4: {"name": "Hippocampus_R", "color": [0, 64, 0]},
-            5: {"name": "Hippocampus_L", "color": [0, 127, 0]},
-            6: {"name": "OpticNerve_R", "color": [0, 0, 255]},
-            7: {"name": "OpticNerve_L", "color": [0, 64, 128]},
-            8: {"name": "OpticTract_R", "color": [255, 0, 128]},
-            9: {"name": "OpticTract_L", "color": [250, 128, 114]}
+            4: {"name": "Hippocampus_L", "color": [0, 64, 0]},
+            5: {"name": "Hippocampus_R", "color": [0, 127, 0]},
+            6: {"name": "OpticNerve_L", "color": [0, 0, 255]},
+            7: {"name": "OpticNerve_R", "color": [0, 64, 128]},
+            8: {"name": "OpticTract_L", "color": [255, 0, 128]},
+            9: {"name": "OpticTract_R", "color": [250, 128, 114]}
         }
 
         # contour = {
@@ -64,7 +65,18 @@ class DataWriter(Operator):
                 )
 
         rtstruct.save(os.path.join(out_path, "rtstruct_predictions.dcm"))
+        self.copytree(dcm_dir, out_path)
         print(timer.report())
 
     def get_boolean_array(self, pred_array: np.array, label_i: int):
         return pred_array == label_i
+
+    @staticmethod
+    def copytree(src, dst, symlinks=False, ignore=None):
+        for item in os.listdir(src):
+            s = os.path.join(src, item)
+            d = os.path.join(dst, item)
+            if os.path.isdir(s):
+                shutil.copytree(s, d, symlinks, ignore)
+            else:
+                shutil.copy2(s, d)
