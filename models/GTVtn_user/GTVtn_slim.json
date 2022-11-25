@@ -1,0 +1,11 @@
+{
+  "container_tag": "mathiser/inference_server_models:Task101_auh_slim",
+  "human_readable_id": "gtvtn_slim2",
+  "input_mountpoint": "/input",
+  "output_mountpoint": "/output",
+  "model_mountpoint": "/model",
+  "zip_file_path": "/home/mathis/projects_repos/inference_server_models/models/GTVtn/GTVtn.zip",
+  "use_gpu": true,
+  "model_available": true,
+  "description": "GTVtn segmentation in HN - single fold"
+}
