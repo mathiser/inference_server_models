@@ -1,5 +1,5 @@
 {
-  "container_tag": "mathiser/inference_server_models:Task702_NKI_Drop_slim",
+  "container_tag": "mathiser/inference_server_models:Task101_auh_slim",
   "human_readable_id": "gtvtn_slim2",
   "input_mountpoint": "/input",
   "output_mountpoint": "/output",

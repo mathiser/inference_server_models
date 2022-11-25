@@ -16,7 +16,7 @@ class GTVApplication(Application):
     def compose(self):
         # Creates the DAG by link the operators
         # 0 Dataloader
-        dataloader_op = DataLoader()
+        dataloader_op = DataLoader() # load with resample to 1mm
         # 1 Invert
         inverter_op = InvertImages()
 

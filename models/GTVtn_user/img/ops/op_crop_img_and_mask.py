@@ -22,7 +22,7 @@ class CropAllImages(Operator):
         label_array_dict = op_input.get("label_array_dict")
 
         for k in label_array_dict.keys():
-            if "0002" in k:
+            if "0002.nii" in k:
                 mr_key = k
                 break
         else:

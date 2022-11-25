@@ -35,7 +35,7 @@ class Predict(Operator):
         tp.close()
         tp.join()
 
-        os.system(f"nnUNet_predict -t 702 -tr nnUNetTrainerV2_dropout -f 0 -i {tmp_in} -o {tmp_out}")
+        os.system(f"nnUNet_predict -t 101 -tr nnUNetTrainerV2 -f 0 -i {tmp_in} -o {tmp_out}")
 
         for f in os.listdir(tmp_out):
             if f.endswith(".nii.gz"):
