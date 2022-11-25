@@ -39,7 +39,8 @@ class DataLoader(Operator):
             if "0003.nii" in f:
                 out_dict[f], _ = self.get_array_and_resampled_from_path(path, use_nn=False)
             if "0004.nii" in f:
-                out_dict[f], _ = self.get_array_and_resampled_from_path(path, use_nn=True) ## user input should stay as tinary images (expecting, 0 as background, 1 as GTV-T seed and 2 as GTV-N seed)
+                out_dict[f], _ = self.get_array_and_resampled_from_path(path, use_nn=True) 
+                ## user input should stay as tinary images (expecting, 0 as background, 1 as GTV-T seed, and 2 as GTV-N seed)
 
         op_output.set(value=out_dict, label="label_array_dict")
         print(timer.report())
