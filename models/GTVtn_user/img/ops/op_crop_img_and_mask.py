@@ -42,6 +42,9 @@ class CropAllImages(Operator):
     def crop_array(self, label, array, bounding_box):
         z, y, x = bounding_box
         cropped_arr = array[z[0]:z[1], y[0]: y[1], x[0]: x[1]]
+        if "0000.nii" in label:
+            if cropped_arr.min() > -50:
+                cropped_arr = cropped_arr-1000
 
         return label, cropped_arr
 
