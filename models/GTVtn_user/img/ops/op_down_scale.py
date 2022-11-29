@@ -1,4 +1,5 @@
 import logging
+import os
 from multiprocessing.pool import ThreadPool
 from typing import Dict, Tuple
 
@@ -9,12 +10,11 @@ from monai.deploy.core import ExecutionContext, InputContext, IOType, Operator, 
 import SimpleITK as sitk
 from .timer import TimeOP
 
-@md.input("label_array_dict", Dict[str, np.ndarray], IOType.IN_MEMORY)
-@md.input("ref_image", sitk.Image, IOType.IN_MEMORY)
-@md.output("label_array_dict", Dict[str, np.ndarray], IOType.IN_MEMORY)
-@md.output("scale_factor", Tuple, IOType.IN_MEMORY)
+@md.input("label_array_dict", Dict[str, sitk.Image], IOType.IN_MEMORY)
+@md.input("ref_contour_meta", Dict, IOType.IN_MEMORY)
+@md.output("label_array_dict", Dict[str, sitk.Image], IOType.IN_MEMORY)
 @md.env(pip_packages=["monai==0.6.0", "simpleitk", "numpy", "scikit-image"])
-class DownScaleImages(Operator):
+class DownScaleContour(Operator):
     def __init__(self):
         self.logger = logging.getLogger("{}.{}".format(__name__, type(self).__name__))
         super().__init__()
@@ -23,21 +23,19 @@ class DownScaleImages(Operator):
         timer = TimeOP(__name__)
 
         arrs = op_input.get("label_array_dict")
-        ref_img = op_input.get("ref_image")
-        ref_arr = sitk.GetArrayFromImage(ref_img)
-        ref_dim = ref_arr.shape
+        ref_contour_meta = op_input.get("ref_contour_meta")
 
-        scale_factor = self.get_scale_factor(arrs["tmp_0001.nii.gz"], ref_dim)
-        op_output.set(scale_factor, "scale_factor")
-        arrs["tmp_0001.nii.gz"] = self.down_scale(arrs["tmp_0001.nii.gz"], scale_factor)
+        arr = sitk.GetArrayFromImage(arrs["tmp_0004.nii.gz"])
+        down_scaled = self.down_scale(arr, tuple([n for n in reversed(ref_contour_meta["multiplier"])]))
+        down_scaled_img = sitk.GetImageFromArray(down_scaled)
+        down_scaled_img.SetSpacing(tuple(np.array(ref_contour_meta["spacing"]) * np.array(ref_contour_meta["multiplier"])))
+        down_scaled_img.SetOrigin(ref_contour_meta["origin"])
+
+        arrs["tmp_0004.nii.gz"] = down_scaled_img
+
         op_output.set(arrs, label="label_array_dict")
 
         print(timer.report())
-
-    def get_scale_factor(self, img_arr, ref_dim):
-        scale_factor = tuple(np.array(img_arr.shape) // np.array(ref_dim))
-        logging.info(scale_factor)
-        return scale_factor
 
     def down_scale(self, img_arr, scale_factor: Tuple):
         reduced_arr = skimage.measure.block_reduce(img_arr, scale_factor, np.max)
