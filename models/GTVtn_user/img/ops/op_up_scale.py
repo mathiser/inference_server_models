@@ -1,12 +1,14 @@
 import logging
-import os
 from typing import Dict
 
+import SimpleITK as sitk
 import monai.deploy.core as md
 import numpy as np
 from monai.deploy.core import ExecutionContext, InputContext, IOType, Operator, OutputContext
-import SimpleITK as sitk
+
 from .timer import TimeOP
+
+
 @md.input("seg", sitk.Image, IOType.IN_MEMORY)
 @md.input("ref_contour_meta", Dict, IOType.IN_MEMORY)
 @md.output("seg", sitk.Image, IOType.IN_MEMORY)

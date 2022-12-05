@@ -1,15 +1,14 @@
+import logging
 import json
 import logging
 import os
-from typing import Dict
 
 import SimpleITK as sitk
 import monai.deploy.core as md
-import numpy as np
 from monai.deploy.core import ExecutionContext, DataPath, InputContext, IOType, Operator, OutputContext
 
 from .timer import TimeOP
-import json
+
 
 @md.input("seg", sitk.Image, IOType.IN_MEMORY)
 @md.output("", DataPath, IOType.DISK)

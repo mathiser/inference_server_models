@@ -1,14 +1,14 @@
 import logging
-import os
-from multiprocessing.pool import ThreadPool
 from typing import Dict, Tuple
 
+import SimpleITK as sitk
 import monai.deploy.core as md
 import numpy as np
 import skimage.measure
-from monai.deploy.core import ExecutionContext, InputContext, IOType, Operator, OutputContext, Image
-import SimpleITK as sitk
+from monai.deploy.core import ExecutionContext, InputContext, IOType, Operator, OutputContext
+
 from .timer import TimeOP
+
 
 @md.input("label_array_dict", Dict[str, sitk.Image], IOType.IN_MEMORY)
 @md.input("ref_contour_meta", Dict, IOType.IN_MEMORY)

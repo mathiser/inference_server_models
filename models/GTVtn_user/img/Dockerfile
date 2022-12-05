@@ -1,4 +1,4 @@
-FROM pytorch/pytorch:1.9.1-cuda11.1-cudnn8-runtime
+FROM pytorch/pytorch:1.13.0-cuda11.6-cudnn8-runtime
 
 
 ADD requirements.txt /requirements.txt
@@ -16,7 +16,7 @@ ENV INPUT=/input
 ENV OUTPUT=/output
 ENV RESULTS_FOLDER=/model
 
-RUN mkdir $INPUT $OUTPUT $RESULTS_FOLDER
+RUN mkdir $INPUT $OUTPUT
 
 
 RUN ["chmod", "+x", "/main.sh"]

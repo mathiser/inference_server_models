@@ -1,15 +1,15 @@
 import logging
 import os
-import shutil
 import tempfile
 from multiprocessing.pool import ThreadPool
 from typing import Dict
 
 import SimpleITK as sitk
 import monai.deploy.core as md
-import numpy as np
 from monai.deploy.core import ExecutionContext, InputContext, IOType, Operator, OutputContext
+
 from .timer import TimeOP
+
 
 @md.input("label_array_dict", Dict[str, sitk.Image], IOType.IN_MEMORY)
 @md.output("seg", sitk.Image, IOType.IN_MEMORY)

@@ -11,7 +11,6 @@ from .timer import TimeOP
 
 @md.input("", DataPath, IOType.DISK)
 @md.output("label_array_dict", Dict[str, sitk.Image], IOType.IN_MEMORY)
-# @md.output("ref_img_meta", Dict)
 @md.output("ref_contour_meta", Dict)
 @md.env(pip_packages=["monai==0.6.0", "simpleitk", "numpy"])
 

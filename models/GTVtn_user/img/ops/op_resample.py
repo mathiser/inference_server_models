@@ -1,12 +1,12 @@
 import logging
-import os.path
 from multiprocessing.pool import ThreadPool
 from typing import Dict
 
 import SimpleITK as sitk
 import monai.deploy.core as md
 import numpy as np
-from monai.deploy.core import ExecutionContext, DataPath, InputContext, IOType, Operator, OutputContext, Image
+from monai.deploy.core import ExecutionContext, InputContext, IOType, Operator, OutputContext
+
 from .timer import TimeOP
 
 

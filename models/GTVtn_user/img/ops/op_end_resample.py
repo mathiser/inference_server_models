@@ -1,11 +1,11 @@
 import logging
-import os
 from typing import Dict
 
 import SimpleITK as sitk
 import monai.deploy.core as md
-from monai.deploy.core import ExecutionContext, InputContext, IOType, Operator, OutputContext
 import numpy as np
+from monai.deploy.core import ExecutionContext, InputContext, IOType, Operator, OutputContext
+
 from .timer import TimeOP
 
 
